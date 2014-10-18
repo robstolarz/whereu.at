@@ -1,14 +1,15 @@
-<div ng-include="'components/navbar/navbar.html'"></div>
+<div id="vert-table">
+  <div ng-include="'components/navbar/navbar.html'"></div>
 
-<!--<header class="hero-unit" id="banner">
-</header>-->
+  <!--<header class="hero-unit" id="banner">
+  </header>-->
 
-<div id="flex-wrapper">
-  <div ui-view ng-if='side=="left"' class='sidePanel'></div>
-  <leaflet></leaflet>
-  <div></div>
+  <div id="flex-wrapper" class="vert-item">
+    <!-- ui-view -->
+    <div class="flex-panel"></div>
+    <leaflet id="map"></leaflet>
+  </div>
 </div>
-
 <!--<footer class="footer">
   <div class="container">
       <p>Angular Fullstack v2.0.13 |

@@ -34,6 +34,30 @@ body {
 	margin: 0;
 }
 
-html, body, .angular-leaflet-map, #main-view,#flex-wrapper  {
+html, body, .angular-leaflet-map, #main-view,#flex-wrapper,#vert-table {
 	height: 100%;
+	width: 100%
 }
+
+#flex-wrapper {
+	display: flex;
+	flex-wrap:nowrap;
+}
+
+#map {
+	flex: 1 1 auto;
+}
+
+.flex-panel {
+	flex: 1 1 auto;
+}
+
+#vert-table {
+	display: table;
+}
+
+#vert-table > * {
+	display: table-row;
+	width: 100%;
+}
+
