@@ -32,21 +32,27 @@
 body {
 	padding: 0;
 	margin: 0;
+	-webkit-text-size-adjust:100%;
 }
 
 html, body, #main-view,#wrapper {
 	height: 100%;
-	width: 100%
+	width: 100%;
 }
 
 #wrapper {
+	display: -webkit-flex;
 	display: flex;
+	-webkit-flex-direction: column;
 	flex-direction: column;
 }
 
 #row-wrapper {
+	display: -webkit-flex;
 	display: flex;
+	-webkit-flex: 1;
 	flex: 1;
+	-webkit-flex-direction: row;
 	flex-direction: row;
 }
 
@@ -55,5 +61,6 @@ html, body, #main-view,#wrapper {
 	}
 
 	#map {
+		-webkit-flex: 1;
 		flex: 1;
 	}
