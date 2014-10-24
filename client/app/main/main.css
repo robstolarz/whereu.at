@@ -57,10 +57,39 @@ html, body, #main-view,#wrapper {
 }
 
 	#flex-panel {
-		width:30%
+		width:50%
 	}
 
 	#map {
 		-webkit-flex: 1;
 		flex: 1;
+	}
+
+#nav {
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-direction: row;
+	flex-direction: row;
+}
+
+	.nav-flex-item {
+		-webkit-animation: myfirst 5s linear 2s infinite alternate;
+		animation: myfirst 5s linear 2s infinite alternate;
+		-webkit-flex: 1;
+		flex: 1;
+		font-size: 24px;
+		text-align: center;
+		color:white;
+	}
+	
+	#friends {
+		background-color: #397774
+	}
+	
+	#back {
+		background-color: #CCCCCC
+	}
+	
+	#parties {
+		background-color: #5B2962
 	}

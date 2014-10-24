@@ -1,5 +1,5 @@
 <div id="wrapper">
-  <div id="nav" ng-include="'components/navbar/navbar.html'"></div>
+  
 
   <!--<header class="hero-unit" id="banner">
   </header>-->
@@ -8,6 +8,12 @@
     <!-- ui-view -->
     <div id="flex-panel">Booty</div>
     <leaflet id="map" center="center" markers="markers" paths="paths"></leaflet>
+  </div>
+  
+  <div id="nav"> <!--ng-include="'components/navbar/navbar.html'"-->
+    <div id="friends" class="nav-flex-item">FRIENDS</div>
+    <div id="back" class="nav-flex-item">back</div>
+    <div id="parties" class="nav-flex-item">PARTIES</div>
   </div>
 </div>
 <!--<footer class="footer">
