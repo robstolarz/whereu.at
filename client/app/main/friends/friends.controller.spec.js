@@ -1,16 +1,16 @@
 'use strict';
 
-describe('Controller: AtCtrl', function () {
+describe('Controller: FriendsCtrl', function () {
 
   // load the controller's module
   beforeEach(module('whereuatApp'));
 
-  var AtCtrl, scope;
+  var FriendsCtrl, scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    AtCtrl = $controller('AtCtrl', {
+    FriendsCtrl = $controller('FriendsCtrl', {
       $scope: scope
     });
   }));

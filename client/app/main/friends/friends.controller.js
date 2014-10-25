@@ -1,6 +1,6 @@
 'use strict';
 
 angular.module('whereuatApp')
-  .controller('AtCtrl', function ($scope) {
+  .controller('FriendsCtrl', function ($scope) {
     $scope.message = 'Hello';
   });
