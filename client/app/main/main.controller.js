@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('whereuatApp')
-  .controller('MainCtrl', function ($scope,$window, $location, $timeout) {
+  .controller('MainCtrl', function ($scope,$window, $location, $timeout, $state) {
     $scope.center = {
       lat: 40.095,
       lng: -3.823,
@@ -25,7 +25,8 @@ angular.module('whereuatApp')
         latlngs: { lat: 0, lng: 0 }
       }
     }
-    
+    $scope.isMainView = function(){ return $state.current.name == 'main' };
+    $scope.$watch('$state.current',console.log);
     $timeout(function(){
       $window.navigator.geolocation.watchPosition(function(point){
         console.log(point);

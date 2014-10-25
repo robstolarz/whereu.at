@@ -6,13 +6,13 @@
 
   <div id="row-wrapper">
     <!-- ui-view -->
-    <div id="flex-panel">Booty</div>
+    <div ui-view id="flex-panel" ng-hide="isMainView()">Hey! I'm the annoying ui-view from hell!</div>
     <leaflet id="map" center="center" markers="markers" paths="paths"></leaflet>
   </div>
   
   <div id="nav"> <!--ng-include="'components/navbar/navbar.html'"-->
-    <div id="friends" class="nav-flex-item">FRIENDS</div>
-    <div id="back" class="nav-flex-item">back</div>
+    <a id="friends" class="nav-flex-item" ui-sref="main.friends">FRIENDS</a>
+    <!--<div id="back" class="nav-flex-item">back</div>-->
     <div id="parties" class="nav-flex-item">PARTIES</div>
   </div>
 </div>
