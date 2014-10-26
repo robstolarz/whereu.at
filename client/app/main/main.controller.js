@@ -25,8 +25,7 @@ angular.module('whereuatApp')
         latlngs: { lat: 0, lng: 0 }
       }
     }
-    $scope.isMainView = function(){ return $state.current.name == 'main' };
-    $scope.$watch('$state.current',console.log);
+    $scope.$state = $state;
     $timeout(function(){
       $window.navigator.geolocation.watchPosition(function(point){
         console.log(point);

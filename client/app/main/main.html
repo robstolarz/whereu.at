@@ -6,14 +6,14 @@
 
   <div id="row-wrapper">
     <!-- ui-view -->
-    <div ui-view id="flex-panel" ng-hide="isMainView()">Hey! I'm the annoying ui-view from hell!</div>
+    <div ui-view id="flex-panel" ng-hide="$state.is('main')">Hey! I'm the annoying ui-view from hell!</div>
     <leaflet id="map" center="center" markers="markers" paths="paths"></leaflet>
   </div>
   
   <div id="nav"> <!--ng-include="'components/navbar/navbar.html'"-->
-    <a id="friends" class="nav-flex-item" ui-sref="main.friends">FRIENDS</a>
-    <!--<div id="back" class="nav-flex-item">back</div>-->
-    <div id="parties" class="nav-flex-item">PARTIES</div>
+    <a id="friends" class="nav-flex-item" ng-hide="$state.includes('main.parties')" ui-sref="main.friends">FRIENDS</a>
+    <div id="back" class="nav-flex-item" ng-hide="$state.is('main')" ui-sref="main">back</div>
+    <div id="parties" class="nav-flex-item" ng-hide="$state.includes('main.friends')" ui-sref="main.parties">PARTIES</div>
   </div>
 </div>
 <!--<footer class="footer">
