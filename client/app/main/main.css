@@ -47,49 +47,49 @@ html, body, #main-view,#wrapper {
 	flex-direction: column;
 }
 
-#row-wrapper {
-	display: -webkit-flex;
-	display: flex;
-	-webkit-flex: 1;
-	flex: 1;
-	-webkit-flex-direction: row;
-	flex-direction: row;
-}
-
-	#flex-panel {
-		width:50%
-	}
-
-	#map {
+	#row-wrapper {
+		display: -webkit-flex;
+		display: flex;
 		-webkit-flex: 1;
 		flex: 1;
+		-webkit-flex-direction: row;
+		flex-direction: row;
 	}
 
-#nav {
-	display: -webkit-flex;
-	display: flex;
-	-webkit-flex-direction: row;
-	flex-direction: row;
-}
+		#flex-panel {
+			width:50%
+		}
 
-	.nav-flex-item {
-		-webkit-animation: myfirst 5s linear 2s infinite alternate;
-		animation: myfirst 5s linear 2s infinite alternate;
-		-webkit-flex: 1;
-		flex: 1;
-		font-size: 30px;
-		text-align: center;
-		color:white;
+		#map {
+			-webkit-flex: 1;
+			flex: 1;
+		}
+
+	#nav {
+		display: -webkit-flex;
+		display: flex;
+		-webkit-flex-direction: row;
+		flex-direction: row;
 	}
-	
-	#friends {
-		background-color: #397774
-	}
-	
-	#back {
-		background-color: #CCCCCC
-	}
-	
-	#parties {
-		background-color: #5B2962
-	}
+
+		.nav-flex-item {
+			-webkit-animation: myfirst 5s linear 2s infinite alternate;
+			animation: myfirst 5s linear 2s infinite alternate;
+			-webkit-flex: 1;
+			flex: 1;
+			font-size: 30px;
+			text-align: center;
+			color:white;
+		}
+		
+		#friends {
+			background-color: #397774
+		}
+		
+		#back {
+			background-color: #CCCCCC
+		}
+		
+		#parties {
+			background-color: #5B2962
+		}
