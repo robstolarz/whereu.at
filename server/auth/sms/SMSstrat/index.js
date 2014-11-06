@@ -1,9 +1,11 @@
 var passport = require('passport')
   , util = require('util');
 
-function SMSstrat(options) {
+function SMSstrat(sid, authToken, fromPhone, options) {
   
   passport.Strategy.call(this);
+  this.client = require('twilio')(accountSid, authToken);
+  this.fromPhone = fromPhone;
   this.name = 'sms';
 }
 
@@ -19,18 +21,23 @@ util.inherits(SMSstrat, passport.Strategy);
  * @api protected
  */
 SMSstrat.prototype.authenticate = function(req) {
+  /* check if the user is authorized */
   var authorization = req.headers['authorization'];
   if (!authorization) { return this.fail(401); }
   
+  /* check for a malformed request */
   var parts = authorization.split(' ')
   if (parts.length < 2) { return this.fail(400); }
   
+  /* split credentials from thing */
   var scheme = parts[0]
     , credentials = new Buffer(parts[1], 'base64').toString().split(':');
 
+  /* verify TODO */
   if (!/Basic/i.test(scheme)) { return this.fail(this._challenge()); }
   if (credentials.length < 2) { return this.fail(400); }
   
+  /* test username and password */
   var userid = credentials[0];
   var password = credentials[1];
   if (!userid || !password) {
