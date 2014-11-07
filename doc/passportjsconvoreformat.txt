@@ -1,0 +1,175 @@
+* Now talking on #passport.js
+* Topic for #passport.js is: Passport - simple, unobtrusive authentication for Node.js
+* Topic for #passport.js set by jaredhanson at Tue Feb 12 16:57:35 2013
+ThatTreeOverTher: Hey, how do I create a new authentication strategy
+* frankbli_ (~frankbliz@g229072145.adsl.alicedsl.de) has joined #passport.js
+* frankblizzar has quit (Ping timeout: 265 seconds)
+* HairAndBeardGuy_ has quit (Quit: I'm going down... NOW!)
+* HairAndBeardGuy (~HairAndBe@cpc2-ruth7-2-0-cust665.14-1.cable.virginm.net) has joined #passport.js
+tellnes: ThatTreeOverTher: just look at one of the existing one and implement something similar
+ThatTreeOverTher: tellnes, I don't want it to be based on OAuth or OpenID though
+ThatTreeOverTher: and everything uses `util.inherits(Strategy, OAuth2Strategy);`
+tellnes: ThatTreeOverTher: not the OAuth2Strategy strategy
+tellnes: https://github.com/jaredhanson/passport-oauth2/blob/master/lib/strategy.js
+tellnes: ThatTreeOverTher: https://github.com/jaredhanson/passport-http/blob/master/lib/passport-http/strategies/basic.js
+ThatTreeOverTher: See, I want to get rid of the password part too
+tellnes: passport-http is probably a good one to look at since it does not have external dependencies
+ThatTreeOverTher: (that one's really helpful also)
+tellnes: You should not remove the passport one
+tellnes: https://github.com/jaredhanson/passport-strategy/blob/master/lib/strategy.js
+tellnes: because then you cant do stuff like `YourCustomStrategy instanceof passport.Strategy`
+ThatTreeOverTher: tellnes, is it possible to get rid of the password part then? Cause I don't want it
+tellnes: this is the passport part: https://github.com/jaredhanson/passport-strategy/blob/master/lib/strategy.js
+tellnes: why do you want to get rid of it?
+* frankbli_ has quit ()
+tellnes: but i suppose it will work without it
+ThatTreeOverTher: I want authorization to be handled over SMS instead
+ThatTreeOverTher: So someone tries to log in, I text message them; once they respond, they are authed
+ThatTreeOverTher: (is that even possible)
+tellnes: it should be possible
+ThatTreeOverTher: Do you know how I should go about doing this?
+tellnes: but to create a good ui, you probably need to leak some of the implementation outside the passport strategy
+ThatTreeOverTher: Why is that?
+ThatTreeOverTher: The UI, to me, is; put in phone number, get spinner until the SMS is answered
+tellnes: so then you want some websocket stuff
+ThatTreeOverTher: Do I?
+ThatTreeOverTher: I was just going to poll every 15 seconds, but I suppose
+tellnes: or you can do ajax pooling
+ThatTreeOverTher: I mean I could totally do it the way people do it now, where you get a token and paste it somewhere
+ThatTreeOverTher: But that seems bothersome to me
+tellnes: or ajax long-pooling, but then you are not fare away from websocket
+tellnes: I like the solution when the user answer the sms
+tellnes: it is siliar to how the banks are doing it here in norway
+ThatTreeOverTher: Me too! And it gives me a chance to ask them more questions. Because I want to only ask for a phone number when people sign up.
+ThatTreeOverTher: Then if people want to provide a name to be searched by, that's what they respond with on their first login
+ThatTreeOverTher: or "no thanks" if they don't want to be searched
+ThatTreeOverTher: tellnes, how do banks do it in Norway?
+tellnes: http://ipod1.no/artikkel/3141/bankid-p%C3%A5-iphone
+tellnes: it is in norwegian
+tellnes: but scroll down to the images
+tellnes: you write in your sosial number and phone number at their website
+tellnes: then you get a reference which also shows at your phone
+tellnes: after you have verified that the refernce is correct you write your pine code
+ThatTreeOverTher: That's great! So there's a real world precedent for what I want to do
+tellnes: and then the website ate your computer authenticate and redirects
+tellnes: it is one of two authentication method
+tellnes: but they does not use sms
+ThatTreeOverTher: Right. Because SMS is a bit unsafe, actually. Good thing I'm not making a banking app :)
+tellnes: they have done something more low level implementation
+tellnes: not all telecom providers support ut
+tellnes: it
+ThatTreeOverTher: Oh, is it in the SIM card or something?
+tellnes: I don't now the tecnical details
+tellnes: but something like that
+tellnes: it works even when your phone is locked
+ThatTreeOverTher: SIM card interfaces fascinate me. I had to interact with one during my time in Poland, and it was interesting to see the text based UI on my iPhone
+tellnes: and it is not an app you install
+ThatTreeOverTher: I guess the banks and cell providers are working together. That's really cool, then
+tellnes: yes
+ThatTreeOverTher: So how am I supposed to do this? I already implement passport strategies, but how do I create this one to fit where the others do?
+tellnes: some of the cellphone providers have talked about charging extra for it
+tellnes: here is a video demonstration: https://www.youtube.com/watch?v=cdgbj8ibQ0g
+tellnes: I would have gone for websocket
+tellnes: http://primus.io/
+tellnes: to do the user interaction
+tellnes: the you do not need to burden your self with pooling and all it wuirks
+tellnes: *quirks
+ThatTreeOverTher: Sure. But like, what about the rest of the strategy?
+tellnes: what about just redirecting the user to a page with a token using the strategy when the sms part is finished
+ThatTreeOverTher: What I'm getting here is, I need a prototype.authenticate function
+tellnes: yeah
+tellnes: but just think about Strategy#authenticate as a middleware
+tellnes: because that basicly is what it is
+ThatTreeOverTher: So I take the user's request, which I guess will contain some random string as a token and a phone number... then during authenticate I message that user, and once they respond, the random string as token becomes a valid auth token
+ThatTreeOverTher: and all the while, clients poll and try to log in with the random string as token until it succeeds
+tellnes: thats a solution yes
+ThatTreeOverTher: And this is all possible with Passport?
+ThatTreeOverTher: Oh, it's a middleware. Which means it's supposed to reject or allow ASAP
+ThatTreeOverTher: Oh
+tellnes: yes
+tellnes: or redirect you
+tellnes: like the oauth strategies does
+ThatTreeOverTher: Currently, my frontend will "just ask" routes for information, and if that fails (via 401) then it redirects to the login page
+tellnes: so like I said, I would have done the sms part before I involved passport
+tellnes: so then, at your login page, you do the sms part and everything needed around it with ajaz/websocket
+tellnes: if you are using ajax you can probably implement it with passport yes
+ThatTreeOverTher: So I guess I'll have to cancel the user's action until they're logged in
+ThatTreeOverTher: That makes me a teensy bit sad
+ThatTreeOverTher: I need to puzzle over this for a few hours, I think
+tellnes: what about calling Strategy#authenticate with ajax and just not responding while you are waiting for the sms
+tellnes: i practice, implement longpooling in your strategy
+ThatTreeOverTher: Everything is done by Ajax by my app, except it expects a direct response of data
+ThatTreeOverTher: Like, Auth is done at the API level only
+ThatTreeOverTher: all static pages are viewable without auth
+tellnes: ok
+ThatTreeOverTher: So I'll have to 401 instead of providing data, and the app will redirect, so I'll lose a user action..
+ThatTreeOverTher: But honestly that's not that bad 
+ThatTreeOverTher: Better to lose a single user action than to lose them all
+ThatTreeOverTher: (or something?)
+tellnes: https://github.com/jaredhanson/passport/blob/master/lib/middleware/authenticate.js#L168
+tellnes: you should read the function signatures from there
+tellnes:  strategy.success = function(user, info) {
+tellnes:  strategy.fail = function(challenge, status) {
+tellnes:  strategy.redirect = function(url, status) {
+tellnes:  strategy.pass = function() {
+tellnes:  strategy.error = function(err) {
+tellnes: thats basicly what options you have in your strategy
+tellnes: or just not respond to any of them
+ThatTreeOverTher: lol just blackhole the request, that would be a dick move by my API
+tellnes: you can send a custom response
+ThatTreeOverTher: What is fail?
+tellnes: you have access to the request object
+ThatTreeOverTher: or, why does it have challenge
+tellnes: and the response is accessible from that by express as req.res
+tellnes: the challenge ends up in the WWW-Authenticate http header
+tellnes: https://github.com/jaredhanson/passport/blob/master/lib/middleware/authenticate.js#L128-L154
+ThatTreeOverTher: So what does the client have to do then?
+ThatTreeOverTher: Does the client have to send the phone number every time the API is used?
+tellnes: thats up to how you implement it
+ThatTreeOverTher: How does the local strategy do it?
+tellnes: https://github.com/jaredhanson/passport-local/blob/master/lib/strategy.js#L75
+tellnes: but you can catch the failures in your application, 401 with WWW-Authenticate header is just default if you do not specify anything else
+tellnes: you should read the authenticate.js file
+ThatTreeOverTher: Right, it fails on auth if you don't have user&password
+ThatTreeOverTher: but then what?
+tellnes: thats up to the application
+ThatTreeOverTher: Does the application have to send the user every time? or does an auth token take care of that?
+ThatTreeOverTher: I thought there were like, sessions or something
+tellnes: ah
+tellnes: passport depends on express session
+tellnes: if you want that
+tellnes: again, it depends
+tellnes: I have an api and is using bearer token
+tellnes: for that the client (the user) need to send the token for each request
+ThatTreeOverTher:  if(req.query && req.query.hasOwnProperty('access_token')) {        req.headers.authorization = 'Bearer ' + req.query.access_token;      }
+ThatTreeOverTher: Hey! Apparently so am I! :D
+ThatTreeOverTher: The only problem with using yeoman generators is that you have to decompile your own code to figure out how it works
+ThatTreeOverTher: It's not a problem if you never have to change it (because you can take most of it for granted) but for things like a custom auth strategy, ugh
+tellnes: ah
+tellnes: I have not used it
+tellnes: i mostly write thing from scrash or is using libraries
+ThatTreeOverTher: Yeah, I'm trying to learn from this boilerplate... I usually try to write tiny things from scratch too, but I wanted to try something new
+tellnes: you learn code from two things: reading others code and writeing your own code
+tellnes: thats true for more than code
+ThatTreeOverTher: That's the problem with this boilerplate: it's not "academic", it's intended for production use. Which makes it really hard to read. And it's not super documented, so a lot of things deep within are impenetrable.
+ThatTreeOverTher: Which is why I'm here, trying to "learn without learning"
+ThatTreeOverTher: tellnes, thanks for the help, I'll see how it goes and get back to you if I succeed/need more help
+tellnes: :)
+tellnes: Can't prommise I'm always here, but good look
+ThatTreeOverTher: Thanks!
+* Disconnected ().
+-NickServ- You are now identified for ThatTreeOverTher.
+* Disconnected ().
+-NickServ- You are now identified for ThatTreeOverTher.
+* Now talking on #passport.js
+* Topic for #passport.js is: Passport - simple, unobtrusive authentication for Node.js
+* Topic for #passport.js set by jaredhanson at Tue Feb 12 16:57:35 2013
+* Now talking on #passport.js
+* Topic for #passport.js is: Passport - simple, unobtrusive authentication for Node.js
+* Topic for #passport.js set by jaredhanson at Tue Feb 12 16:57:35 2013
+ 
+* Loaded log from Sun Nov  2 12:45:31 2014
+ 
+* Now talking on #passport.js
+* Topic for #passport.js is: Passport - simple, unobtrusive authentication for Node.js
+* Topic for #passport.js set by jaredhanson at Tue Feb 12 16:57:35 2013
