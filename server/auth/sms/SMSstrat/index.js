@@ -1,5 +1,6 @@
 var passport = require('passport')
-  , util = require('util');
+  , util = require('util')
+  , User = require('mongoose').model('User');
 
 function SMSstrat(sid, authToken, fromPhone, options) {
   
@@ -30,8 +31,8 @@ SMSstrat.prototype.authenticate = function(req) {
   if (parts.length < 2) { return this.fail(400); }
   
   /* split credentials from thing */
-  var scheme = parts[0]
-    , credentials = new Buffer(parts[1], 'base64').toString().split(':');
+  var phone = parts[0],
+  random = parts[1];
 
   /* verify TODO */
   if (!/Basic/i.test(scheme)) { return this.fail(this._challenge()); }
