@@ -20,7 +20,7 @@ angular.module('whereuatApp')
         var cb = callback || angular.noop;
         var deferred = $q.defer();
 
-        $http.post('/auth/local', {
+        $http.post('/auth/sms', {
           email: user.email,
           password: user.password
         }).

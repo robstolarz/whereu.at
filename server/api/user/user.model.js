@@ -3,29 +3,30 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var crypto = require('crypto');
-var authTypes = ['github', 'twitter', 'facebook', 'google'];
+var authTypes = ['sms'];
 
 var UserSchema = new Schema({
   name: String,
-  email: { type: String, lowercase: true },
+  phone: String,
   role: {
     type: String,
     default: 'user'
   },
-  hashedPassword: String,
   provider: String,
-  salt: String,
-  facebook: {},
-  twitter: {},
-  google: {},
-  github: {},
-  phone: String
+  authToken: {type:String,validate:[function(v){return v.length === 16},'token length != 16']},
+  conversation: {
+    token:String,
+    convoStep:{
+      type:String,
+      enum:['login','waiting']
+    }
+  }
 });
 
 /**
  * Virtuals
  */
-UserSchema
+/*UserSchema
   .virtual('password')
   .set(function(password) {
     this._password = password;
@@ -34,7 +35,7 @@ UserSchema
   })
   .get(function() {
     return this._password;
-  });
+  });*/
 
 // Public profile information
 UserSchema
@@ -60,23 +61,23 @@ UserSchema
  * Validations
  */
 
-// Validate empty email
+/*// Validate empty email
 UserSchema
   .path('email')
   .validate(function(email) {
     if (authTypes.indexOf(this.provider) !== -1) return true;
     return email.length;
-  }, 'Email cannot be blank');
+  }, 'Email cannot be blank');*/
 
-// Validate empty password
+/*// Validate empty password
 UserSchema
   .path('hashedPassword')
   .validate(function(hashedPassword) {
     if (authTypes.indexOf(this.provider) !== -1) return true;
     return hashedPassword.length;
-  }, 'Password cannot be blank');
+  }, 'Password cannot be blank');*/
 
-// Validate email is not taken
+/*// Validate email is not taken
 UserSchema
   .path('email')
   .validate(function(value, respond) {
@@ -89,7 +90,7 @@ UserSchema
       }
       respond(true);
     });
-}, 'The specified email address is already in use.');
+}, 'The specified email address is already in use.');*/
 
 var validatePresenceOf = function(value) {
   return value && value.length;
