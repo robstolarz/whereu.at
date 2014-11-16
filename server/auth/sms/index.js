@@ -16,5 +16,5 @@ router.post('/', function(req, res, next) {
     res.json({token: token});
   })(req, res, next)
 });
-
+console.log('sms prepared!');
 module.exports = router;

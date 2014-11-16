@@ -9,10 +9,7 @@ angular.module('whereuatApp')
       $scope.submitted = true;
 
       if(form.$valid) {
-        Auth.login({
-          email: $scope.user.email,
-          password: $scope.user.password
-        })
+        Auth.login($scope.user)
         .then( function() {
           // Logged in, redirect to home
           $location.path('/');

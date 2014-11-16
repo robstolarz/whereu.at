@@ -1,6 +1,7 @@
 var passport = require('passport')
   , util = require('util')
-  , User = require('mongoose').model('User');
+  , User = require('mongoose').model('User')
+  , moment = require('moment');
 
 function SMSstrat(sid, authToken, fromPhone, options) {
   
@@ -24,35 +25,28 @@ util.inherits(SMSstrat, passport.Strategy);
  */
 SMSstrat.prototype.authenticate = function(req) {
   /* check if the user is authorized */
-  var authorization = req.headers['authorization'];
-  if (!authorization) { return this.fail(401); }
   
-  /* check for a malformed request */
-  var parts = authorization.split(' ')
-  if (parts.length < 2) { return this.fail(400); }
-  
-  /* split credentials from thing */
-  var phone = parts[0],
-    token = parts[1];
-  
+  var phone = req.body['phone'];
+  if (!phone) { return this.fail(400); }
+  var self = this,
+    stopid = setTimeout(function(){self.fail(401)},60000);
   User.find({phone:phone}).exec(function(err,users){
     if(err) throw err;
     
-    if(users && users[0] && users[0].authToken == token) //if we find a user and their token works
-      return self.success(user); //then we're good to go
-    
-    //even if we don't find a user, redirect... just don't do anything else :)
-    this.redirect('/user/login/spinlock');
-    //but if we actually find a user
-    if(users && users[0]){
-      this.client.messages.create({
-        to: phone,
-        from: this.fromPhone,
-        body: "Hey there! It looks like someone's trying to log into your account. To finish logging in, just respond to this text. HELP for help, STOP to stop."
-      });
-      users[0].conversation = {token:token,convoStep:'login'};
+    if(users && users[0] && req.body['authorization'] && users[0] == req.body['authorization'].match(/^Bearer (.+)$/)){ //if we find a user and their token works
+      clearTimeout(stopid); //cancel the death (for memory reasons) TODO: integrate upwards
+      return self.success(users[0]); //then we're good to go
     }
     
+    //but if we actually find a user
+    if(users && users[0]){
+      self.client.messages.create({
+        to: phone,
+        from: self.fromPhone,
+        body: "Hey there! It looks like someone's trying to log into your account. To finish logging in, just respond to this text. HELP for help, STOP to stop."
+      },console.log);
+      users[0].conversation = {convoStep:'login',time:new Date};
+    }
   });
 }
 

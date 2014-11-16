@@ -21,8 +21,7 @@ angular.module('whereuatApp')
         var deferred = $q.defer();
 
         $http.post('/auth/sms', {
-          email: user.email,
-          password: user.password
+          phone:user.phone
         }).
         success(function(data) {
           $cookieStore.put('token', data.token);

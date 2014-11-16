@@ -13,13 +13,12 @@ var UserSchema = new Schema({
     default: 'user'
   },
   provider: String,
-  authToken: {type:String,validate:[function(v){return v.length === 16},'token length != 16']},
   conversation: {
-    token:String,
     convoStep:{
       type:String,
       enum:['login','waiting']
-    }
+    },
+    time:Date
   }
 });
 
