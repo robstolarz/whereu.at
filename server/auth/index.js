@@ -12,7 +12,6 @@ require('./sms/passport').setup(User, config);
 var router = express.Router();
 
 router.use('/local', require('./local'));
-console.log('including sms!');
 router.use('/sms', require('./sms'));
 
 module.exports = router;
