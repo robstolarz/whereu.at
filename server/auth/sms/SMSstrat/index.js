@@ -10,7 +10,6 @@ function SMSstrat(sid, authToken, fromPhone, options) {
   this.fromPhone = fromPhone;
   this.name = 'sms';
   
-  //TODO: start SMS read loop
 }
 
 /**
@@ -26,18 +25,24 @@ util.inherits(SMSstrat, passport.Strategy);
  */
 SMSstrat.prototype.authenticate = function(req) {
   /* check if the user is authorized */
+  var self = this; //I hate JS.
   
+  if(req.body['authorization']){
+    User.find({token:req.body['authorization'].match(/^Bearer (.+)$/)})
+    .exec(function(err,users){
+      if(err) throw err;
+      if(users && users[0]) //if we find a user with the token
+        return self.success(users[0]); //then we're good to go
+      return self.fail(401); //or get out
+    });
+  }
+  
+  /* otherwise try logging them in */
   var phone = req.body['phone'];
   if (!phone) { return this.fail(400); }
-  var self = this,
-    stopid = setTimeout(function(){self.fail(401)},60000);
+  var stopid = setTimeout(function(){self.fail(401)},60000);
   User.find({phone:phone}).exec(function(err,users){
     if(err) throw err;
-    
-    if(users && users[0] && req.body['authorization'] && users[0].token == req.body['authorization'].match(/^Bearer (.+)$/)){ //if we find a user and their token works
-      clearTimeout(stopid); //cancel the death (for memory reasons) TODO: integrate upwards
-      return self.success(users[0]); //then we're good to go
-    }
     
     //but if we actually find a user
     if(users && users[0] &&  //is there a user?

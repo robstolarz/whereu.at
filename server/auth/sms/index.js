@@ -16,5 +16,12 @@ router.post('/', function(req, res, next) {
     res.json({token: token});
   })(req, res, next)
 });
-console.log('sms prepared!');
+router.post('/echo', function(req, res, next) {
+  console.log(req.body);
+  console.log("IT WORKED");
+  console.log("---------------------");
+  console.log(req.body.Body);
+  console.log("---------------------");
+  res.send(200);
+});
 module.exports = router;
