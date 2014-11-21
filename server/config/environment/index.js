@@ -26,7 +26,7 @@ var all = {
 
   // Secret for session, you will want to change this and make it an environment variable
   secrets: {
-    session: 'whereuat-secret'
+    session: 'There was once a girl I\'d swear I\'d known forever\nHer name in every song, her smile in every summer'
   },
 
   // List of user roles
@@ -39,7 +39,9 @@ var all = {
         safe: true
       }
     }
-  }
+  },
+  // a randomized ID for DB/clustering/SMS purposes
+  uuid: require('node-uuid').v4()
 };
 
 // Export the config object based on the NODE_ENV

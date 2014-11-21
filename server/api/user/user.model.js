@@ -18,7 +18,8 @@ var UserSchema = new Schema({
       type:String,
       enum:['login','waiting']
     },
-    time:Date
+    time:Date,
+    uuid:String
   }
 });
 
