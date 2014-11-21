@@ -27,8 +27,16 @@ module.exports  = (function(config,ipc){
       console.log(ipc().get(u.phone));
       switch(u.conversation.convoStep){
       case 'login':
-        //if(config.uuid == u.conversation.uuid) //forget this for now, we're not sharding yet
-          ipc().get(u.phone)()
+        if(config.uuid == u.conversation.uuid) //forget this for now, we're not sharding yet
+          if(ipc().get(u.phone)){
+            ipc().get(u.phone)();
+            u.conversation = {
+              convoStep:'waiting',
+              time:new Date,
+              uuid:null
+            };
+            u.save()
+          }
         break;
       default:
         break;
