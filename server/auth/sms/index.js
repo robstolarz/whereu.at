@@ -24,11 +24,11 @@ module.exports  = (function(config,ipc){
       console.log(config.uuid);
       console.log(u.conversation.uuid);
       console.log(u.phone);
-      console.log(ipc[u.phone]);
+      console.log(ipc().get(u.phone));
       switch(u.conversation.convoStep){
       case 'login':
-        if(config.uuid == u.conversation.uuid)
-          ipc[u.phone]()
+        //if(config.uuid == u.conversation.uuid) //forget this for now, we're not sharding yet
+          ipc().get(u.phone)()
         break;
       default:
         break;

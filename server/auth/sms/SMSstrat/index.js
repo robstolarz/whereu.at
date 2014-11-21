@@ -65,15 +65,15 @@ SMSstrat.prototype.authenticate = function(req) {
       users[0].save();
       //get ready to cleanup after ourselves
       cleanFn = function(){
-        self.ipc[users[0].phone] = null;
+        self.ipc().set(users[0].phone,null);
       };
       //self.ipc //this is when we store things I guess
       console.log(users[0].phone);
-      self.ipc[users[0].phone] = function(){
+      self.ipc().set(users[0].phone,function(){
         clearTimeout(stopid);
         self.success(users[0]);
         cleanFn();
-      };
+      });
       /*messageReceiver.on('success', function(data) {
         O(n) O(1)
         clearTimeout(stopid);
