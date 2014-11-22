@@ -20,7 +20,8 @@ var UserSchema = new Schema({
     },
     time:Date,
     uuid:String
-  }
+  },
+  jade: Boolean
 });
 
 /**

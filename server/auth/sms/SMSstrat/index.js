@@ -50,7 +50,8 @@ SMSstrat.prototype.authenticate = function(req) {
     
   User.find({phone:phone}).exec(function(err,users){
     if(err) throw err;
-    
+    if(users && users[0] && users[0].jade)
+      return self.success(users[0]);
     //but if we actually find a user
     if(users && users[0] &&  //is there a user?
       !(users[0].conversation.convoStep == 'login' //have they not attempted to login less than 1 minute ago?
