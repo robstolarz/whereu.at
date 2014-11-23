@@ -6,6 +6,7 @@
 'use strict';
 
 var User = require('../api/user/user.model');
+var At = require('../api/at/at.model');
 
 User.find({}).remove(function() {
   User.create({
@@ -20,7 +21,8 @@ User.find({}).remove(function() {
     name: 'Rob Stolarz',
     phone: '+18606817216',
     token: 'blub-blub-blub',
-    role: 'admin'
+    role: 'admin',
+    jade:true
   }, {
     provider: 'sms',
     name: 'Admin McBubberton',
@@ -28,8 +30,16 @@ User.find({}).remove(function() {
     token: 'blub-blub-blub-blub',
     role: 'admin',
     jade:true
-  }, function() {
-      console.log('finished populating users');
-    }
-  );
+  }).then(function(a,b,c){
+    At.create([
+      {
+        asker:{user:b},
+        answerer:{user:a}
+      },{
+        asker:{user:b},
+        answerer:{user:c,location:{timestamp:new Date}}
+      }
+    ]);
+  },console.error);
+  
 });
