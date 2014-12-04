@@ -38,6 +38,9 @@ User.find({}).remove(function() {
       },{
         asker:{user:b},
         answerer:{user:c,location:{timestamp:new Date}}
+      },{
+        asker:{user:b},
+        answerer:{user:c}
       }
     ]);
   },console.error);

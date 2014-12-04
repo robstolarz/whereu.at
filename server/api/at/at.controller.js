@@ -2,21 +2,50 @@
 
 var _ = require('lodash');
 var At = require('./at.model');
+var Model = require('mongoose').Model;
+
+var popAt = function(res,ats){
+  At.populate(
+    ats,
+    {path: 'asker.user answerer.user', model:'User'},
+    function(err, ats){
+      if(err) { return handleError(res, err); }
+      return res.json(200, ats);
+    }
+  );
+}
 
 // Get list of ats
 exports.index = function(req, res) {
-  At.find(function (err, ats) {
+  console.log(req.user);
+  At
+  .find({
+    $or:[
+      {asker:{user:req.user._id}},
+      {answerer:{user:req.user._id}}
+    ]
+  })
+  .exec(function (err, ats) {
     if(err) { return handleError(res, err); }
-    return res.json(200, ats);
+    popAt(res,ats);
   });
 };
 
 // Get a single at
 exports.show = function(req, res) {
-  At.findById(req.params.id, function (err, at) {
+  console.log(req.user);
+  At
+  .findById(req.params.id)
+  .exec(function (err, at) {
     if(err) { return handleError(res, err); }
+    console.log(at);
     if(!at) { return res.send(404); }
-    return res.json(at);
+    if(
+      at.answerer.user != req.user._id ||
+      at.asker.user != req.user._id
+    ) 
+      return res.send(403);
+    popAt(res,at);
   });
 };
 

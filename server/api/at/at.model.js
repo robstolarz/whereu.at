@@ -47,6 +47,11 @@ AtSchema.static('areFriends',function(u1,u2){
   ]);
 });
 
+/*AtSchema.pre('save', function (next) {
+  
+  next();
+});*/
+
 AtSchema.pre('save', function (next) {
   this.when = Math.max(this.asker.location.timestamp||0,this.answerer.location.timestamp||0);
   next();
