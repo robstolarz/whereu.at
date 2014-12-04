@@ -3,7 +3,7 @@ This is the friends view.
     <div ng-repeat="friend in me.friends">
         {{friend.name}}
     </div>
-    <div ng-repeat="at in ats | orderBy : at.when">
+    <div ng-repeat="at in ats | orderBy : 'when' : true">
       {{at.answerer.location.timestamp?"Received":"Sent"}} | {{at.answerer.user.name}} <span style='color:gray;'>{{at.when}}</span>
     </div>
 </div>
