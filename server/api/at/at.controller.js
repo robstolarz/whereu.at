@@ -25,6 +25,7 @@ exports.index = function(req, res) {
       {answerer:{user:req.user._id}}
     ]
   })
+  .sort('when')
   .exec(function (err, ats) {
     if(err) { return handleError(res, err); }
     popAt(res,ats);
