@@ -1,9 +1,12 @@
-<div class="col-md-12">
-This is the friends view.
-    <div ng-repeat="friend in me.friends">
-        {{friend.name}}
-    </div>
-    <div ng-repeat="at in ats | orderBy : 'when' : true">
-      {{at.answerer.location.timestamp?"Received":"Sent"}} | {{at.answerer.user.name}} <span style='color:gray;'>{{at.when}}</span>
-    </div>
+<div id="atcontainer">
+    <at ng-repeat="at in ats | orderBy : 'when' : true">
+      <name>
+        {{at.answerer.user.name}}
+      </name>
+      <div>
+        <state>{{at.answerer.location.timestamp?"Received":"Sent"}}</state>
+        <time>{{at.when}}</time>
+      </div>
+    </at>
+    <div style="flex: 1 1 ">TODO: get this to fill upwards</div>
 </div>
