@@ -1,19 +1,30 @@
 #atcontainer {
-	background-color: tomato; /* protip: remove this */
+	background-color: #61cac5;
 	display: -ms-flexbox;
 	display: -webkit-flex; 
 	display:flex; 
 	-webkit-flex-flow:column-reverse wrap; 
 	flex-flow:column-reverse wrap;
+	/*overflow-y:auto;*/
+	overflow-x:visible;
+}
+
+input[searchbox] {
+	-webkit-flex:0;
+	flex:0;
+	padding: 2px 6px;
+	margin:2px 2px;
+	border: 5px solid #439880;
+	border-radius:10px;
+	background-color: #439880;
+	color:white;
 }
 
 at {
 	line-height:normal; 
 	-webkit-flex:0;
 	flex:0;
-	border-top: 2px solid #439880;
-	background-color: #61cac5;
-	overflow-y:auto;
+	border-bottom: 2px solid #439880;
 	overflow-x:hidden;
 	text-overflow: ellipsis; 
 	white-space: nowrap;
@@ -22,10 +33,10 @@ at {
 at name {
 	font-size:1.4em;
 	color:white;
+	overflow-x:hidden;
 }
 
 at time {
-	display:inline;
 	color: #397774;
 }
 

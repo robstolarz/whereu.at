@@ -1,12 +1,14 @@
 <div id="atcontainer">
+    <!--<input searchbox type="text,tel" placeholder="this'll be a search"/>-->
+    <input type="text,tel" placeholder="this'll be a search"/>
     <at ng-repeat="at in ats | orderBy : 'when' : true">
       <name>
         {{at.answerer.user.name}}
       </name>
       <div>
         <state>{{at.answerer.location.timestamp?"Received":"Sent"}}</state>
-        <time>{{at.when}}</time>
+        <!--<time>{{at.when}}</time>-->
       </div>
     </at>
-    <div style="flex: 1 1 ">TODO: get this to fill upwards</div>
+    <div style="flex: 1 1 ;border-bottom: 2px solid #439880;">TODO: get this to fill upwards</div>
 </div>

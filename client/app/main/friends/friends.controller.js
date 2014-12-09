@@ -8,6 +8,7 @@ angular.module('whereuatApp')
     };
     console.log("yo");
     $scope.ats = At.query();
+    console.log($scope.ats);
     if(Auth.isLoggedIn()){
       $scope.me = User.get();
       console.log("yo");
