@@ -3,13 +3,15 @@
 var _ = require('lodash');
 var At = require('./at.model');
 var Model = require('mongoose').Model;
+var ObjectId = require('mongoose').Types.ObjectId;
 
-var popAt = function(res,ats){
+var popAt = function(res,ats,cb){
   At.populate(
     ats,
     {path: 'asker.user answerer.user', model:'User'},
     function(err, ats){
       if(err) { return handleError(res, err); }
+      if(cb)return cb(ats);
       return res.json(200, ats);
     }
   );
@@ -17,6 +19,7 @@ var popAt = function(res,ats){
 
 // Get list of ats
 exports.index = function(req, res) {
+  console.log(req.headers['authorization']); //get rid of this
   console.log(req.user);
   At
   .find({
@@ -36,17 +39,25 @@ exports.index = function(req, res) {
 exports.show = function(req, res) {
   console.log(req.user);
   At
-  .findById(req.params.id)
+  .find({
+    $and:[
+      {$or:[
+        {asker:{user:req.user._id}},
+        {answerer:{user:req.user._id}}
+      ]},
+      {_id:req.params.id}
+    ]
+  })
   .exec(function (err, at) {
+    console.log('noegw');
     if(err) { return handleError(res, err); }
     console.log(at);
+    var at = at[0]; //shadowed. hopefully performant
+    console.log(at);
+    console.log('hello');
     if(!at) { return res.send(404); }
-    if(
-      at.answerer.user != req.user._id ||
-      at.asker.user != req.user._id
-    ) 
-      return res.send(403);
-    popAt(res,at);
+    console.log('noiusgaw');
+    return popAt(res,at);
   });
 };
 
@@ -60,12 +71,38 @@ exports.create = function(req, res) {
 
 // Updates an existing at in the DB.
 exports.update = function(req, res) {
-  if(req.body._id) { delete req.body._id; }
-  At.findById(req.params.id, function (err, at) {
-    if (err) { return handleError(res, err); }
-    if(!at) { return res.send(404); }
-    var updated = _.merge(at, req.body);
-    updated.save(function (err) {
+  if(req.body._id) { delete req.body._id; } // don't change id of object I guess (? I didn't write this)
+  console.log("I swear, it's running! just not correctly :(");
+  console.log(req.params.id);
+  console.log(req.user._id);
+  At
+  .find({
+    $and:[
+      {$or:[
+        {asker:{user:req.user._id}},
+        {answerer:{user:req.user._id}}
+      ]},
+      {_id:req.params.id}
+    ]
+  })
+  .exec(function (err,ats) { //#whocaresanymore
+    console.log('dongs');
+    console.log(err);
+    var at = ats[0];
+    console.log(at);
+    if(!at)return res.send(404);
+    var which; //kind of user respective to this At
+    var i = req.user._id.toString(),
+      hate = at.asker.user.toString(),
+      myself = at.answerer.user.toString();
+    if(i == hate){
+      which = 'asker';
+    }else if(i == myself){
+      which = 'answerer';
+    } else return res.send(500); // I wish for matching in ECMAScript 7
+    //TODO: replace this stupid bottleneck with upsertion maybe? if possible?
+    at[which].location = req.body[which].location;
+    at.save(function (err) {
       if (err) { return handleError(res, err); }
       return res.json(200, at);
     });
